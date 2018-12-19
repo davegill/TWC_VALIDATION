@@ -1,0 +1,54 @@
+{
+	"_comment_" : "Input to run the ANOVA testing for the IBM/TWC/NCAR GPU MPAS tests",
+
+	"mpas_root"   :   "../validation",
+
+	"mpas_tail"   :   "_debug=false_precision=single.nc",
+
+	"mpas_output" : [ "validation.2010-10-23_00.12.00.nc",
+	                  "validation.2010-10-23_00.24.00.nc",
+	                  "validation.2010-10-23_00.36.00.nc" ],
+
+	"init_file" : "../x1.40962.init.2010-10-23_00.nc",
+
+	"observations" : 20,
+
+	"compare" : [ 
+		{
+			"field" : "u" , 
+			"file_root" : "file_u"
+		},
+
+		{
+			"field" : "theta" , 
+			"file_root" : "file"
+		}
+	],
+
+	"design" : [
+		
+		{
+			"factor" : "LOCATIONS",
+			"levels" : [ "Indian", "Pacific", "Himilaya", "Sahara", "Australia", "Rockies", "Antarctic" ],
+			"names"  : [ "Indian Ocean", "East Pac Tropical", "Himilayan Mtns", 
+			             "Sahara Desert", "Australian Desert", "Rocky Mtns", "Antarctica" ]
+		},
+		
+		{
+			"factor" : "COMPILERS",
+			"levels" : [ "gfortran_class", "gfortran", "pgi", "ifort", "gpu" ],
+			"names"  : [ "GNU 5.2.0", "GNU 6.3.0", "PGI 17.9", "Intel 17.0.1", "PGI xx.x" ]
+		},
+		
+		{
+			"factor" : "TIMES",
+			"levels" : [ "2010-10-23_00.12.00", "2010-10-23_00.24.00", "2010-10-23_00.36.00" ],
+			"names"  : [ "12 min", "24 min", "36 min" ]
+		}
+	],
+
+	"min_lat_box" : [ -4,   -5, 29, 17, -29,   30,  -89.9 ],
+	"max_lat_box" : [  4,    5, 42, 28, -20,   50,  -84.0 ],
+	"min_lon_box" : [ 56, -170, 70, -4, 124, -110, -179.9 ],
+	"max_lon_box" : [ 70, -110, 88, 27, 144, -105,  179.9 ]
+}
