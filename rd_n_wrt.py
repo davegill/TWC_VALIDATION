@@ -48,11 +48,10 @@ print ( " " )
 
 #	Assignment of filenames from the input JSON file
 
-out_files = data["mpas_output"][:]
 root = data["mpas_root"]
 tail = data["mpas_tail"]
 ic = data["init_file"]
-obs = data["observations"]
+obs = data["num_points_per_region"]
 
 #	How many factors are we handling
 
@@ -105,218 +104,248 @@ for fac in range(0,max_fac):
 		print "".join(levels[fac][lev][0:lenny[fac][lev]])
 
 print ("\nMPAS files")
-#for inp_file in range(len(data["mpas_output"])): 
-#	print data["mpas_output"][inp_file]
 print ("Initialization file: " + data["init_file"] )
 print ("MPAS root:           " + root )
 print ("MPAS tail:           " + tail )
 
-print ("Number of sampled measurements per geographical region = " + str(data["observations"]) + "\n" )
+print ("Number of sampled measurements per geographical region = " + str(data["num_points_per_region"]) + "\n" )
 
 #	We difference with this IC file
 
 o = Dataset(data["init_file"])
 
-#	The IC has the lat lon fields, which we use to select boxes.
-#	We need a separate lat/lon for u and theta.
-#	The longitude is modifed to be degrees, -180 to 180
-
-lat_theta = o.variables["latCell"][:] * 180. / math.pi
-lon_theta = o.variables["lonCell"][:] * 180. / math.pi
-for i in range(len(lon_theta)):
-	if lon_theta[i] > 180:
-		lon_theta[i] = lon_theta[i] - 360.
-
-lat_u = o.variables["latEdge"][:] * 180. / math.pi
-lon_u = o.variables["lonEdge"][:] * 180. / math.pi
-for i in range(len(lon_u)):
-	if lon_u[i] > 180:
-		lon_u[i] = lon_u[i] - 360.
-
 #	Get the local names for the regions we will be testing.
 
-regions = len(data['design'][0]['names'])
+regions = len(data['design'][0]['levels'])
 names = np.empty((regions,100), dtype=str)
 str_len = np.empty(regions, dtype=int)
 r=0
 while r < regions :
-	str_len[r] = len(data['design'][0]['names'][r])
+	str_len[r] = len(data['design'][0]['levels'][r])
 	s=0
 	while s < str_len[r] :
-		names[r][s] = data['design'][0]['names'][r][s]
+		names[r][s] = data['design'][0]['levels'][r][s]
 		s = s + 1
-	#print (str(r+1) + " " + "".join(names[r][0:str_len[r]]) )
 	r = r + 1
 
 #	Get the local region lat lon box limits.
 
-min_lat = data["min_lat_box"]
-max_lat = data["max_lat_box"]
-min_lon = data["min_lon_box"]
-max_lon = data["max_lon_box"]
+min_lat = data["min_lat_box_degrees"]
+max_lat = data["max_lat_box_degrees"]
+min_lon = data["min_lon_box_degrees"]
+max_lon = data["max_lon_box_degrees"]
 
-#	We initialize our count of how many theta and u points
-#	match our random number criteria, which is used for the
-#	final selection.
+#	How many fields are we processing? The fields are separate. For example,
+#	a theta field's results would not be used in any of the statistics for
+#	a u field's results.
 
-count_theta = [ 0, 0, 0, 0, 0, 0, 0 ]
-count_u     = [ 0, 0, 0, 0, 0, 0, 0 ]
+num_fields = len(data['compare'])
 
-#	We could first count these guys, but let's be expeditious
-#	number of theta or u data points, respectively.
+#	We initialize our count of how many of the points in each
+#	field match our random criteria. Also, same size, initialize
+#	the count of values within each region for each field.
 
-contains_in_each_theta = ( 109., 586., 184., 304., 166., 80., 125. )
-contains_in_each_u     = ( 329., 1748., 559., 923., 501., 234., 380. )
+count            = np.zeros([num_fields,regions],dtype=int)
+contains_in_each = np.zeros([num_fields,regions],dtype=int)
 
 #	We eventually want data[observation] number of measurements 
 #	within each box. We first randomly thin down to "want_in_each".
 
 want_in_each = 50.
 
-#	We should get this out of the netcdf file instead
+#	Allocate space and initialize the field horizontal and vertical 
+#	dimensions, and the vertical level for comparison for each
+#	field.
 
-total_theta =  40962
-total_u     = 122880
+fields_hdim = np.empty(num_fields,dtype=int)
+fields_vdim = np.empty(num_fields,dtype=int)
+v_lev = np.empty(num_fields,dtype=int)
 
-possible_indexes_theta = np.empty((7, 100),dtype=np.int)
-possible_indexes_u     = np.empty((7, 100),dtype=np.int)
-indexes_theta          = np.empty((7,  20),dtype=np.int)
-indexes_u              = np.empty((7,  20),dtype=np.int)
+#	Make a list for the field names. If the field names are longer than 32 characters,
+#	then we'd bump up that 32 thing.
+
+fields = [[' '] * 32 for i in range(num_fields)]
+
+#	Fill in the field names and dimensions, and the vertical level that is
+#	selected for the 3d field comparison.
+
+for f in range(num_fields):
+	fields[f] = list(data['compare'][f]['field'])
+	fields_hdim[f] = o.variables[data['compare'][f]['field']].shape[1]
+	fields_vdim[f] = o.variables[data['compare'][f]['field']].shape[2]
+	v_lev[f] = data['compare'][f]['v_lev_0_based']
+
+#	How many locations are there
+
+l=0
+while l < len(data['design']) :
+	if data['design'][l]['factor'] == "LOCATIONS" :
+		locations = len(data['design'][l]['levels'])
+		break
+	l = l + 1
+
+#	Allocate space for indexes. This is the location in the MPAS file. We are
+#	partitioning this into an array that has a fixed number of grid cells
+#	that are selected per region, the number of regions, and the total number
+#	of fields that are being tested. We HUGELY over allocate the possible index
+#	array as we end up doing a couple of random things (literally) to finally
+#	get down to our requested index set.
+
+indexes          = np.empty((num_fields, locations,   obs),dtype=np.int)
+possible_indexes = np.empty((num_fields, locations, 5*obs),dtype=np.int)
 
 #	Repeatable random sequences, PLEASE!
 
-random.seed(9001)
-
-#	Loop over all of the theta points
-
-p=0
-while p <= total_theta-1 :
-
-	#	Loop over the number of locations
-
-	l=0
-	while l <= len(min_lat)-1 :
-
-		#	For this data value, check to see if we are inside of the lat lon box for this location
-
-		if ( lat_theta[p] >= min_lat[l] ) and ( lat_theta[p] < max_lat[l] ) and ( lon_theta[p] >= min_lon[l] ) and ( lon_theta[p] < max_lon[l] ) :
-	
-			#	Randomly decide: do we take this location based on 
-			#	whether the random number is <= the ratio of values
-			#	that we want to the number of values we have in this 
-			#	lat lon box for this specific location. We have made the
-			#	possible dimension twice what we want, to allow some 
-			#	random slop.
-
-			rr = random.uniform(0.,1.)
-#		if random.uniform(0.,1.) <= want_in_each / contains_in_each_theta[l] :
-			if rr <= want_in_each / contains_in_each_theta[l] :
-				possible_indexes_theta[l,count_theta[l]] = p # +1 if fortran indexing
-				count_theta[l] = count_theta[l] + 1
-		l = l + 1
-	p = p + 1
-
-#	Loop over all of the u points, identical procedure
-
-p=0
-while p <= total_u-1 :
-	l=0
-	while l <= len(min_lat)-1 :
-		if ( lat_u[p] >= min_lat[l] ) and ( lat_u[p] < max_lat[l] ) and ( lon_u[p] >= min_lon[l] ) and ( lon_u[p] < max_lon[l] ) :
-			if random.uniform(0.,1.) <= want_in_each / contains_in_each_u[l] :
-				possible_indexes_u[l,count_u[l]] = p # +1 if fortran indexing
-				count_u[l] = count_u[l] + 1
-		l = l + 1
-	p = p + 1
-
+random.seed(data["random_seed"])
 
 #	Open up the file that has the region info explicitly detailed.
 
 rfile = open("region_lat_lon.txt", "w")
 
-#	We now have sufficient points that were randomly chosen, dimensioned to 100,
-#	but we have approximately half that number by design, so we did not over run
-#	our allocated space. From these "approximately half a hundred" points, we 
-#	apply our second randomizer.
+lat_cell_dim_size = o.variables['latCell'].shape[0]
+lat_edge_dim_size = o.variables['latEdge'].shape[0]
 
-l=0
-while l < len(min_lat) :
-	rfile.write( "CHECK " + "".join(names[l][0:str_len[l]]) + "\n")
+#	Loop over all of the requested fields
 
-	#	First for theta
+n=0
+while n < num_fields :
 
-	rfile.write(str(count_theta[l]) + "\n")
-	my_list = list(xrange(0,count_theta[l]))
-	random.shuffle(my_list)
+	#	The IC has the lat lon fields, which we use to select boxes.
+	#	Get the correct lat/lon for this variable, and convert to degrees.
+	#	The longitude is modifed to be: -180 < lon <= 180
 
-	#	From these super-duper random points, choose the first set that is
-	#	the size of the sample of measurements per geophysical grid box location.
+	if   fields_hdim[n] == lat_cell_dim_size :
+		print ("doing theta lat lon")
+		lat = o.variables["latCell"][:] * 180. / math.pi
+		lon = o.variables["lonCell"][:] * 180. / math.pi
+		for i in range(len(lon)):
+			if lon[i] > 180:
+				lon[i] = lon[i] - 360.
+	elif fields_hdim[n] == lat_edge_dim_size :
+		print ("doing u lat lon")
+		lat = o.variables["latEdge"][:] * 180. / math.pi
+		lon = o.variables["lonEdge"][:] * 180. / math.pi
+		for i in range(len(lon)):
+			if lon[i] > 180:
+				lon[i] = lon[i] - 360.
 
-	i = 0
-	while i < data["observations"] :
-		indexes_theta[l,i] = possible_indexes_theta[l,my_list[i]]
-		rfile.write ("lat = " + str(lat_theta[indexes_theta[l,i]]) + ", lon = " + str(lon_theta[indexes_theta[l,i]]) + "\n")
-		i = i + 1
-	rfile.write ( "\n" )
+	#	Loop over the total horizontal dimension (places) for this field.
 
-	#	Now, we repeat the selection for the u values.
+	p=0
+	while p < fields_hdim[n] :
+	
+		#	Loop over the number of locations (regions that we requested)
+	
+		l=0
+		while l < regions :
+	
+			#	For this data value, check to see if we are inside of the 
+			#	lat lon box for this region / location
+	
+			if ( lat[p] >= min_lat[l] ) and ( lat[p] < max_lat[l] ) and \
+			   ( lon[p] >= min_lon[l] ) and ( lon[p] < max_lon[l] ) :
+				contains_in_each[n,l] = contains_in_each[n,l] + 1
 
-	rfile.write(str(count_u[l]) + "\n")
-	my_list = list(xrange(0,count_u[l]))
-	random.shuffle(my_list)
-	i = 0
-	while i < data["observations"] :
-		indexes_u[l,i] = possible_indexes_u[l,my_list[i]]
-		rfile.write("l i = " + str(l)  + " " + str(i) + " " + "lat = " + "index = " + str(indexes_u[l,i]) + " " + str(lat_u[indexes_u[l,i]]) + ", lon = " + str(lon_u[indexes_u[l,i]]) + "\n")
-		i = i + 1
-	l = l + 1
+			l = l + 1
+		p = p + 1
 
-print ("\nData to verify the region lat lons: region_lat_lon.txt\n")
+	#	Loop over the total horizontal dimension (places) for this field.
 
-#	Now we are generating data for the ANOVA test.
+	p=0
+	while p < fields_hdim[n] :
+	
+		#	Loop over the number of locations (regions that we requested)
+	
+		l=0
+		while l < regions :
+	
+			#	For this data value, check to see if we are inside of the 
+			#	lat lon box for this region / location
+	
+			joe_count = 0
+			if ( lat[p] >= min_lat[l] ) and ( lat[p] < max_lat[l] ) and \
+			   ( lon[p] >= min_lon[l] ) and ( lon[p] < max_lon[l] ) :
+		
+				#	Randomly decide: do we take this location based on 
+				#	whether the random number is <= the ratio of values
+				#	that we want to the number of values we have in this 
+				#	lat lon box for this specific location. We have made the
+				#	possible dimension twice what we want, to allow some 
+				#	random slop.
+	
+				rr = random.uniform(0.,1.)
+				if rr <= want_in_each / contains_in_each[n,l] :
+					possible_indexes[n,l,count[n,l]] = p
+					count[n,l] = count[n,l] + 1
+			l = l + 1
+		p = p + 1
 
-tfile = open("theta.txt", "w")
-ufile = open("u.txt", "w")
+	#	We now have sufficient points that were randomly chosen, dimensioned to 5* # obs requested,
+	#	but we have approximately half that number by design, so we did not over run
+	#	our allocated space. From these "approximately half a hundred" points, we 
+	#	apply our second randomizer.
 
-#	How many factors are we processing
+	#	Loop over each region
 
-tfile.write(str(max_fac) + "\n")
-ufile.write(str(max_fac) + "\n")
+	l=0
+	while l < regions :
+		rfile.write( "CHECK " + "".join(fields[n]) + " field for domain " + "".join(names[l][0:str_len[l]]) + "\n")
+	
+		#	First for theta
+	
+		rfile.write("Choosing " + str(obs) + " out of " + str(count[n,l]) + " values\n")
+		my_list = list(xrange(0,count[n,l]))
+		random.shuffle(my_list)
+	
+		#	From these super-duper random points, choose the first set that is
+		#	the size of the sample of measurements per geophysical grid box location.
+	
+		i = 0
+		while i < data["num_points_per_region"] :
+			indexes[n,l,i] = possible_indexes[n,l,my_list[i]]
+			rfile.write ("lat = " + str(lat[indexes[n,l,i]]) + ", lon = " + str(lon[indexes[n,l,i]]) + "\n")
+			i = i + 1
+		rfile.write ( "\n" )
+		l = l + 1
+	n = n + 1
 
-#	List those factors
+print ("\nData to verify the regions by lat lon locations is output to region_lat_lon.txt\n")
 
-for fac in range(0,max_fac):
-	tfile.write(data['design'][fac]['factor'] + "\n")
-	ufile.write(data['design'][fac]['factor'] + "\n")
+#	Loop over all of the requested fields
 
-#	How many levels per each factor
+n=0
+while n < num_fields :
 
-for fac in range(0,max_fac):
-	tfile.write(str(len(data['design'][fac]['levels'])) + "\n")
-	ufile.write(str(len(data['design'][fac]['levels'])) + "\n")
-
-#	What are the names of those levels (for each factor)
-
-for fac in range(0,max_fac):
-	for lev in range(0,len(data['design'][fac]['levels'][:])):
-		tfile.write(data['design'][fac]['levels'][lev] + "\n")
-		ufile.write(data['design'][fac]['levels'][lev] + "\n")
-
-#	How many samples per region, compiler, time
-
-tfile.write(str(obs)+ "\n")
-ufile.write(str(obs)+ "\n")
-
-#	Only care about two fields: theta and u
-
-importantVars = [ 'u', 'theta' ]
-
-#	Loop over the variables of interest.
-
-for v in importantVars:
-
+	#	Now we are generating data for the ANOVA test, for a specific variable.
+	
+	file = open("".join(fields[n]) + ".txt", "w")
+	
+	#	How many factors are we processing
+	
+	file.write(str(max_fac) + "\n")
+	
+	#	List those factors
+	
+	for fac in range(0,max_fac):
+		file.write(data['design'][fac]['factor'] + "\n")
+	
+	#	How many levels per each factor
+	
+	for fac in range(0,max_fac):
+		file.write(str(len(data['design'][fac]['levels'])) + "\n")
+	
+	#	What are the names of those levels (for each factor)
+	
+	for fac in range(0,max_fac):
+		for lev in range(0,len(data['design'][fac]['levels'][:])):
+			file.write(data['design'][fac]['levels'][lev] + "\n")
+	
+	#	How many samples for each of the bins (for example, in this compiler x region x time sample)
+	
+	file.write(str(obs)+ "\n")
+	
 	#	Loop over each of the primary factors, find the TIME
-
+	
 	for fac_t in range(0,max_fac):
 
 		#	TIME factor
@@ -350,7 +379,6 @@ for v in importantVars:
 							#	Construct the filename with the TIME and COMPILER info
 	
 							fname = root + "." + time + "_" + comp + tail
-							#print (" filename = " + fname )
 	
 							#	The above looping and if tests get us to where we can open a 
 							#	particular MPAS netcdf file with the name. The files are 
@@ -358,11 +386,12 @@ for v in importantVars:
 							#	convention that tells us which compiler was used to construct
 							#	the data.
 
-							#	Once we have the file, we can difference the two specific fields
-							#	(theta and u), for each of the requested geophysical lat lon boxes, 
-							#	for grid locations that were randomly**2 chosen.
-							# 	
+							#	Once we have the file (a function of the compiler test and the time), 
+							#	we can difference the specific fields,
+							#	for each of the requested geophysical lat lon boxes, 
+							#	for value locations that were randomly**2 chosen.
 
+							print ("File name to open = " + fname )
 							f = Dataset(fname)
 	
 							#	For particular geophysical regions. The init files and the validation files
@@ -371,28 +400,16 @@ for v in importantVars:
 							#	differences we would expect to have mean zero.
 	
 							l=0
-							while l <= len(min_lat)-1 :
+							while l < regions :
 
-								#	theta
-
-								if v == 'theta' :
-									i = 0
-									while i < data["observations"] :
-										#print f.variables[v][0,indexes_theta[l,i],0] - o.variables[v][0,indexes_theta[l,i],0]
-										tfile.write(str(f.variables[v][0,indexes_theta[l,i],0] - o.variables[v][0,indexes_theta[l,i],0]) + "\n")
-										i = i + 1
-								
-								#	u
-
-								else :
-									i = 0
-									while i < data["observations"] :
-										#print f.variables[v][0,indexes_u[l,i],0] - o.variables[v][0,indexes_u[l,i],0]
- 										ufile.write(str(f.variables[v][0,indexes_u[l,i],0] - o.variables[v][0,indexes_u[l,i],0]) + "\n")
-										i = i + 1
+								i = 0
+								while i < data["num_points_per_region"] :
+									file.write(str(f.variables["".join(fields[n])][0,indexes[n,l,i],v_lev[n]] - \
+								                       o.variables["".join(fields[n])][0,indexes[n,l,i],v_lev[n]]) + "\n")
+									i = i + 1
 								l = l + 1
 	
+	print ('\nInput for ANOVA for field ' + "".join(fields[n]) + ': ' + "".join(fields[n]) + '.txt\n')
+	n = n + 1
 
-print ("Input for ANOVA for theta: theta.txt\n")
-print ("Input for ANOVA for u:     u.txt\n")      
 sys.exit(0)
