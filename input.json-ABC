@@ -1,0 +1,57 @@
+{
+	"_comment_" : "Michael's Incremental Testing for GPU Commits",
+
+	"mpas_root"   :   "./validation",
+
+	"mpas_tail"   :   "_michael.nc",
+
+	"init_file" : "/glade/scratch/duda/gill/orig/restart.2010-10-24_00.00.00.nc",
+
+	"num_points_per_region" : 20,
+
+	"compare" : [ 
+		{
+			"field" : "u" , 
+			"v_lev_0_based" : 40
+		},
+
+		{
+			"field" : "qv" , 
+			"v_lev_0_based" : 2
+		},
+
+		{
+			"field" : "theta" , 
+			"v_lev_0_based" : 0
+		}
+	],
+
+	"design" : [
+		
+		{
+			"factor" : "LOCATIONS",
+			"names"  : [ "Indian", "Pacific", "Himilaya", "Sahara", "Australia", "Rockies", "Antarctic" ],
+			"levels" : [ "Indian Ocean", "East Pac Tropical", "Himilayan Mtns", 
+			             "Sahara Desert", "Australian Desert", "Rocky Mtns", "Antarctica" ]
+		},
+		
+		{
+			"factor" : "COMPILERS",
+			"names"  : [ "A", "B", "C" ],
+			"levels" : [ "A", "B", "C" ] 
+		},
+		
+		{
+			"factor" : "TIMES",
+			"names"  : [ "06 min", "12 min", "18 min" ],
+			"levels" : [ "2010-10-24_00.06.00", "2010-10-24_00.12.00", "2010-10-24_00.18.00" ]
+		}
+	],
+
+	"min_lat_box_degrees" : [ -4,   -5, 29, 17, -29,   30,  -89.9 ],
+	"max_lat_box_degrees" : [  4,    5, 42, 28, -20,   50,  -84.0 ],
+	"min_lon_box_degrees" : [ 56, -170, 70, -4, 124, -110, -179.9 ],
+	"max_lon_box_degrees" : [ 70, -110, 88, 27, 144, -105,  179.9 ],
+
+	"random_seed" : 9001
+}
