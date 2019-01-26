@@ -1,7 +1,7 @@
 {
 	"_comment_" : "Michael's Incremental Testing for GPU Commits",
 
-	"mpas_root"   :   "./validation",
+	"mpas_root"   :   "/gpfs/fs1/scratch/gill/IBM_COMPARISONS/TWC_VALIDATION/validation",
 
 	"mpas_tail"   :   "_michael.nc",
 
