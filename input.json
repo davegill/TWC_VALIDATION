@@ -3,11 +3,11 @@
 
 	"debug"       :   false,
 
-	"mpas_root"   :   "../validation",
+	"mpas_root"   :   "/gpfs/fs1/p/mmm/wmr/gill/TWC_120km/validation",
 
 	"mpas_tail"   :   "_debug=false_precision=single.nc",
 
-	"init_file" : "../x1.40962.init.2010-10-23_00.nc",
+	"init_file"   :   "/gpfs/fs1/p/mmm/wmr/gill/TWC_120km/x1.40962.init.2010-10-23_00.nc",
 
 	"num_points_per_region" : 20,
 
