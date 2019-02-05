@@ -1,13 +1,11 @@
 {
 	"_comment_" : "Michael's Incremental Testing for GPU Commits",
 
-	"debug"       :   false,
+	"mpas_root"   :   "./validation",
 
-	"mpas_root"   :   "/gpfs/fs1/scratch/gill/IBM_COMPARISONS/TWC_VALIDATION/validation",
+	"mpas_tail"   :   "_debug=false_precision=single.nc",
 
-	"mpas_tail"   :   "_michael.nc",
-
-	"init_file" : "/glade/scratch/duda/gill/orig/restart.2010-10-24_00.00.00.nc",
+	"init_file" : "/gpfs/fs1/scratch/gill/IBM_TWC/ANOVA/x1.40962.init.2010-10-23_00.nc",
 
 	"num_points_per_region" : 20,
 
@@ -39,14 +37,14 @@
 		
 		{
 			"factor" : "COMPILERS",
-			"names"  : [ "A", "B", "C" ],
-			"levels" : [ "A", "B", "C" ] 
+			"names"  : [ "PGI 17.9", "PGI same" ],
+			"levels" : [ "pgi", "pgi_also" ] 
 		},
 		
 		{
 			"factor" : "TIMES",
-			"names"  : [ "06 min", "12 min", "18 min" ],
-			"levels" : [ "2010-10-24_00.06.00", "2010-10-24_00.12.00", "2010-10-24_00.18.00" ]
+			"names"  : [ "12 min", "24 min", "36 min" ],
+			"levels" : [ "2010-10-23_00.12.00", "2010-10-23_00.24.00", "2010-10-23_00.36.00" ]
 		}
 	],
 

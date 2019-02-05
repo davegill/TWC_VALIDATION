@@ -1,6 +1,8 @@
 {
 	"_comment_" : "Input to run the ANOVA testing for the IBM/TWC/NCAR GPU MPAS tests",
 
+	"debug"       :   false,
+
 	"mpas_root"   :   "../validation",
 
 	"mpas_tail"   :   "_debug=false_precision=single.nc",
