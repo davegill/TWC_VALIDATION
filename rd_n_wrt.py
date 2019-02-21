@@ -122,6 +122,15 @@ def init_names_and_numbers(data):
 	
 	print ("\nMPAS files")
 	print ("Initialization file: " + data["init_file"] )
+	if os.path.exists(data["init_file"]):
+ 		print 'Found ' + data["init_file"]
+		print ' '
+ 	else:
+ 		print " "
+ 		print 'File does not exist: ' + data["init_file"]
+ 		print " "
+ 		sys.exit(data["init_file"])
+
 	print ("MPAS root:           " + root )
 	print ("MPAS tail:           " + tail )
 	
