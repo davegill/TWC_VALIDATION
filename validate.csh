@@ -37,23 +37,24 @@ if ( ( ! -e theta.txt ) || \
 	exit ( 2 )
 endif
 
-echo ; echo use that input for ANOVA for theta
-make
-./anova < theta.txt | tail -12 > step_2_theta.out
+#	Build Fortran code that computes ANOVA statistics
 
-echo ; echo compiler comparison for theta
-f2p.py < fort.10
+make -s anova
 
-echo ; echo use that input for ANOVA for qv
-make
-./anova < qv.txt | tail -12 > step_2_qv.out
+#	Run ANOVA tests on fields
 
-echo ; echo compiler comparison for qv
-f2p.py < fort.10
+set vars_to_test = `grep '"field"' $JSON_FILE | cut -d'"' -f4`
 
-echo ; echo use that input for ANOVA for u
-./anova < u.txt     | tail -12 > step_2_u.out
+foreach v ( $vars_to_test )
 
-echo ; echo compiler comparison for u
-f2p.py < fort.10
+	#echo ; echo use that input for ANOVA for $v
+	./anova < ${v}.txt | tail -12 > step_2_${v}.out
+
+	echo ; echo compiler comparison for $v
+	f2p.py < fort.10
+
+end
+
+#	Clean up
+
 rm fort.10
