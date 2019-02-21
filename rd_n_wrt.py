@@ -447,7 +447,7 @@ def diffs_for_anova(data,num_fields,fields,max_fac,obs,factor,root,tail,regions,
 									i = 0
 									while i < data["num_points_per_region"] :
 										file.write(str( \
-										              '{:3.12e}'.format( \
+										              '{:.16e}'.format( \
 										               f.variables["".join(fields[n])][0,indexes[n,l,i],v_lev[n]] - \
 									                       o.variables["".join(fields[n])][0,indexes[n,l,i],v_lev[n]] \
 										              ) \
