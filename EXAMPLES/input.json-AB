@@ -1,5 +1,5 @@
 {
-	"_comment_" : "Michael's Incremental Testing for GPU Commits",
+	"_comment_" : "Example of two files nearly the same, all PASS",
 
 	"debug"       :   false,
 
@@ -39,8 +39,8 @@
 		
 		{
 			"factor" : "COMPILERS",
-			"names"  : [ "A", "B", "C" ],
-			"levels" : [ "A", "B", "C" ] 
+			"names"  : [ "A", "B" ],
+			"levels" : [ "A", "B" ] 
 		},
 		
 		{

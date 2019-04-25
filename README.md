@@ -17,39 +17,69 @@ The purpose of the TWC_VALIDATION code is to provide an objective evaluation of 
    - Comparing the output from different meshes
    - Comparing the output from different horizontal or vertical resolution
 
-#### The Big Picture ####
+#### How To Run #### 
 
-Let's start with some concrete associations and examples.
+1. Fill in the run-time configuration file, `input.json`. There is a `README_JSON.md` file with specific details. There is an `EXAMPLES` directory that has several JSON files that are set up to work on NCAR's cheyenne computer.
+2. Run the driver script `validate.csh`, no arguments required as everything comes in from the JSON file.
+3. This script has three parts:
+   a. Read the NETCDF MAPS model data, select the correct variables and geophysical locations, compute differences, output temporary text files for use by the ANOVA program
+   b. Run a three-factor ANOVA test on the following variables: u (horizontal momentum), t (potential temperature), qv (water vapor mixing ratio)
+   c. Interpret the ANOVA output to produce a probability.
 
-Two of the independent variables that are considered include the geographical location (for example, Indian Ocean vs the Rocky Mountains vs Central Australia), and the time level of the model output (for example, time step _n_ vs time step _n+1_). The third independent variable is typically the specific factor that we want to consider (for example, GNU vs PGI vs Intel compilers). A full comparison requires that each setting of these independent variables (factors) is matched with every possible combination of the other (factors). The necessary comparisons for the example setup would include:
-   - Indian Ocean with time step _n_ with GNU
-   - Indian Ocean with time step _n_ with PGI
-   - Indian Ocean with time step _n_ with Intel
-   - Indian Ocean with time step _n+1_ with GNU
-   - Indian Ocean with time step _n+1_ with PGI
-   - Indian Ocean with time step _n+1_ with Intel
-   - Rocky Mountains with time step _n_ with GNU
-   - Rocky Mountains with time step _n_ with PGI
-   - Rocky Mountains with time step _n_ with Intel
-   - Rocky Mountains with time step _n+1_ with GNU
-   - Rocky Mountains with time step _n+1_ with PGI
-   - Rocky Mountains with time step _n+1_ with Intel
-   - Central Australia with time step _n_ with GNU
-   - Central Australia with time step _n_ with PGI
-   - Central Australia with time step _n_ with Intel
-   - Central Australia with time step _n+1_ with GNU
-   - Central Australia with time step _n+1_ with PGI
-   - Central Australia with time step _n+1_ with Intel
+#### How To Interpret Results ####
 
-This type of design is referred to as a _three factor_ experiment (we have three factors: location, time level, and the hardware / software settings). Each factor has two or more levels (for example, the location factor has Indian Ocean, the Rocky Mountains, and Central Australia levels).
-
-The response variables (the dependent variables) are the measured quantities. For the validation testing, the fundamental variables for horizontal momentum, temperature, and moisture constitute the entire comparison. We normalize the response variables to only look at a perturbation from an "expected" value, which tends to provide a zero bias. This is not necessary, but just a convenience.
-
-Two data sets are conformable if they share the identical values for the following attributes:
-   - mesh
-   - vertical coordinate 
-   - physics and dynamics run-time options
-   - data output settings: frequency, variable set
-   
-
-Assume that we have several conformable output data files. What statement can we make about the similarities or differences of these data sets?
+For ease of use, the results are broken into three pieces: 
+1. Very confident that the results are the same. For this variable, this is considered a POSITIVE indicator that this field is the same. To assume that response, we need all three variables to display this symbol:
+```
+                ▕▔▔▔╲ 
+                 ▏  ▕ 
+                 ▏  ▕ 
+                 ▏  ▕ 
+                 ▏  ▕▂▂▂▂
+          ▂▂▂▂▂▂╱┈▕      ▏
+          ▉▉▉▉▉┈┈┈▕▂▂▂▂▂▂▏
+          ▉▉▉▉▉┈┈┈▕      ▏
+          ▉▉▉▉▉┈┈┈▕▂▂▂▂▂▂▏
+          ▉▉▉▉▉┈┈┈▕      ▏
+          ▉▉▉▉▉┈┈┈▕▂▂▂▂▂▂▏
+          ▉▉▉▉▉╲┈┈▕      ▏
+          ▔▔▔▔▔▔╲▂▕▂▂▂▂▂▂▏
+```
+2. Very confident that the results are different. For this variable, this is considered a NEGATIVE indiactor that this field is the same. To assume this response, we need any single variable to display to disply this symbol:
+```
+                    ▉▉▉▉▉▉▉▉▉▉▉
+                ▉▉▉              ▉▉
+             ▉▉                   ▉▉ 
+            ▉▉     ▉▉        ▉▉     ▉ 
+         ▉▉        ▉▉▉       ▉▉▉     ▉▉ 
+        ▉▉                            ▉▉ 
+       ▉▉                            ▉▉ 
+      ▉▉          ▉▉▉▉▉▉▉▉▉          ▉▉ 
+      ▉▉       ▉▉           ▉▉       ▉▉ 
+      ▉▉      ▉               ▉     ▉▉
+      ▉▉▉                         ▉▉
+       ▉▉▉                      ▉▉
+        ▉▉▉                    ▉▉
+            ▉▉             ▉▉▉
+              ▉▉▉▉▉▉▉▉▉▉▉
+```
+3. Gray area, just not sure. This is an indeterminate region. This is the state when there are no NEGATIVE indicators, but there are also no all POSITIVE indicators.
+```
+                 ▉▉▉▉▉▉▉▉          
+            ▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉       
+          ▉▉▉▉▉▉▉▉     ▉▉▉▉▉▉▉▉    
+         ▉▉▉▉▉            ▉▉▉▉▉▉   
+         ▉▉▉▉              ▉▉▉▉▉   
+                           ▉▉▉▉▉   
+                        ▉▉▉▉▉▉▉    
+                     ▉▉▉▉▉▉▉       
+                   ▉▉▉▉▉▉▉         
+                  ▉▉▉▉▉            
+                 ▉▉▉▉▉             
+                 ▉▉▉▉▉             
+                 ▉▉▉▉▉             
+                 ▉▉▉▉▉             
+                                   
+                 ▉▉▉▉              
+                 ▉▉▉▉              
+```

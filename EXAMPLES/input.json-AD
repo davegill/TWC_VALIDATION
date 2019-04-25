@@ -1,5 +1,5 @@
 {
-	"_comment_" : "Michael's Incremental Testing for GPU Commits",
+	"_comment_" : "Example of different files, FAIL",
 
 	"debug"       :   false,
 
@@ -39,8 +39,8 @@
 		
 		{
 			"factor" : "COMPILERS",
-			"names"  : [ "A", "B", "C", "D" ],
-			"levels" : [ "A", "B", "C", "D" ] 
+			"names"  : [ "A", "D" ],
+			"levels" : [ "A", "D" ] 
 		},
 		
 		{

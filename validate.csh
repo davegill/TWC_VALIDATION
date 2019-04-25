@@ -51,7 +51,7 @@ foreach v ( $vars_to_test )
 	./anova < ${v}.txt | tail -12 > step_2_${v}.out
 
 	echo ; echo compiler comparison for $v
-	f2p.py < fort.10
+	python f2p.py < fort.10
 
 end
 
