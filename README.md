@@ -33,9 +33,9 @@ The purpose of the TWC_VALIDATION code is to provide an objective evaluation of 
 > ml scipy 
 > ml matplotlib
 ```
-4. Run the executable driver script `./validate.csh`, no arguments required as everything comes in from the JSON file.
+4. Run the executable driver script `./validate.csh`, no arguments are required as everything comes in from the JSON file.
 5. This script has three parts:
-    - Read the NETCDF MAPS model data, select the correct variables and geophysical locations, compute differences, output temporary text files for use by the ANOVA program
+    - Read the NETCDF MPAS model data, select the correct variables and geophysical locations, compute differences, output temporary text files for use by the ANOVA program
     - Run a three-factor ANOVA test on the following variables: `u` (horizontal momentum), `theta` (potential temperature), and `qv` (water vapor mixing ratio)
     - Interpret the ANOVA output to produce a probability.
 6. This test takes approximately 60 seconds to conduct (nCells = 163842). Most of the time is spent finding which grid cells are within the correct latitude / longitude box.
