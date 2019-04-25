@@ -35,9 +35,9 @@ The purpose of the TWC_VALIDATION code is to provide an objective evaluation of 
 ```
 4. Run the executable driver script `./validate.csh`, no arguments required as everything comes in from the JSON file.
 5. This script has three parts:
-   a. Read the NETCDF MAPS model data, select the correct variables and geophysical locations, compute differences, output temporary text files for use by the ANOVA program
-   b. Run a three-factor ANOVA test on the following variables: u (horizontal momentum), t (potential temperature), qv (water vapor mixing ratio)
-   c. Interpret the ANOVA output to produce a probability.
+    a. Read the NETCDF MAPS model data, select the correct variables and geophysical locations, compute differences, output temporary text files for use by the ANOVA program
+    b. Run a three-factor ANOVA test on the following variables: u (horizontal momentum), t (potential temperature), qv (water vapor mixing ratio)
+    c. Interpret the ANOVA output to produce a probability.
 
 #### How To Interpret Results ####
 
