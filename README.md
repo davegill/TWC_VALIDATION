@@ -38,6 +38,7 @@ The purpose of the TWC_VALIDATION code is to provide an objective evaluation of 
     - Read the NETCDF MAPS model data, select the correct variables and geophysical locations, compute differences, output temporary text files for use by the ANOVA program
     - Run a three-factor ANOVA test on the following variables: `u` (horizontal momentum), `theta` (potential temperature), and `qv` (water vapor mixing ratio)
     - Interpret the ANOVA output to produce a probability.
+6. This test takes approximately 60 seconds to conduct (nCells = 163842). Most of the time is spent finding which grid cells are within the correct latitude / longitude box.
 
 #### How To Interpret Results ####
 
