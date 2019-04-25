@@ -82,7 +82,7 @@ The `init_file` is either the inital condition file or a restart. It is the full
 		},
 ```
 
-   - The `COMPILERS` factor is the generic name given to the actual comparison test of interest. For example, different levels of optimzations, CPU vs GPU, a collection of compilers, etc. These names (here, `A`, `B`, and `C`) need to match the strings AFTER the DATE in the MPAS model output. This needs to be modified for a particular case.
+   - The `COMPILERS` factor is the generic name given to the actual comparison test of interest. For example, different levels of optimzations, CPU vs GPU, a collection of compilers, etc. These names (here, `A`, `B`, and `C`) need to match the strings AFTER the DATE in the MPAS model output FILENAMES. This needs to be modified for a particular case.
 ```
 		
 		{
@@ -92,7 +92,7 @@ The `init_file` is either the inital condition file or a restart. It is the full
 		},
 ```
 
-   - The `TIMES` factor should ALWAYS be the first three time steps of the simulation (either after the restart of after the initialization).  The `levels` of the `TIMES` need to exactly match the strings in the MPAS model output.
+   - The `TIMES` factor should ALWAYS be the first three time steps of the simulation (either after the restart of after the initialization).  The `levels` of the `TIMES` need to exactly match the strings in the MPAS model output FILENAMES.
 ```
 		
 		{
