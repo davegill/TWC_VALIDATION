@@ -1,6 +1,6 @@
 ## TWC_VALIDATION ##
 
-The purpose of the TWC_VALIDATION code is to provide an objective evaluation of the _sameness_ of the output from different MPAS simulations. With this validation test, we expect the results to be nearly identical. 
+The purpose of the TWC_VALIDATION code is to provide an objective evaluation of the _sameness_ of the output from different MPAS simulations. With this validation test, we expect the results to be nearly identical. This scheme only works with MPAS global simulations.
 
 #### Example Uses for this Code ####
 
