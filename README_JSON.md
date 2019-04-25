@@ -72,7 +72,7 @@ The `init_file` is either the inital condition file or a restart. It is the full
 
 6. This portion defines the three factors for this three-way ANOVA: geophysical locations, the hardware / software comparison, and the time levels of the model output. 
 
-   - The `LOCATIONS` should not be randomly be changed. These were selected to represent different hemispheres, elevations, day / night periods on the globe, tropical vs polar, desert vs ocean,etc. 
+   - The `LOCATIONS` should not be randomly be changed. These were selected to represent different hemispheres, elevations, day / night periods on the globe, tropical vs polar, desert vs ocean, etc. 
 ```
 		{
 			"factor" : "LOCATIONS",
