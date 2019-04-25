@@ -50,7 +50,7 @@ The `init_file` is either the inital condition file or a restart. It is the full
 	"num_points_per_region" : 20,
 ```
 
-5. The comparison is made with theta variables, at these levels. The field `u` is the horizontal momentum, m/s. The vertical level associated with this variable is 40, where the Vertical Level is 0-based (`v_lev_0_based`) means that the level near the surface of the earth is defined as `0`. The other two fields are `qv` (water vapor mixing ratio, kg/kg), and `theta` (potential temperature, K). It is beneficial to sample fields at different levels to make sure that the entire atmosphere is checked for differences. These values should not be modified.
+5. The comparison is made with these specific variables, at these specific levels. The field `u` is the horizontal momentum, m/s. The vertical level associated with this variable is 40, where the Vertical Level is 0-based (`v_lev_0_based`) means that the level near the surface of the earth is defined as `0`. The other two fields are `qv` (water vapor mixing ratio, kg/kg), and `theta` (potential temperature, K). It is beneficial to sample fields at different levels to make sure that the entire atmosphere is checked for differences. These values should not be modified.
 ```
 	"compare" : [ 
 		{
