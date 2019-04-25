@@ -49,11 +49,37 @@ Let's consider multiple MPAS data sets to be _conformable_ if they all share the
    - mesh
    - vertical coordinate 
    - physics and dynamics run-time options
-   - data output settings: frequency, variable set
+   - data output settings: stream, frequency, variable set
    
 Assume that we have several conformable output data files. What statement can we make about the similarities or differences of the measured variables of these data sets?
 
-We use an Analysis of Variance (ANOVA) test to look at multiple factors. After the ANOVA is conducted (three separate tests, one for each variable of interest: `u` (horizontal momentum, m/s), `theta` (potential temperature, K), and `qv` (water vapor mixing ratio, kg/kg). The typical ANOVA presentation is output to an auxiliary set of files. For example, here is the file `step_2_theta.txt`:
+We use an Analysis of Variance (ANOVA) test to look at multiple factors. Our null hypothesis is "these fields are the same". The ANOVA test provides a probability of rejecting that null hypothesis (a high probability means that we reject the null hypothesis, meaning we interpret the fields are different).
+
+The measurements are the dependent variables. Our measurements are the values of `u`, `theta`, and `qv`. These values are specifically chosen from each of the levels of the `LOCATIONS` factor, each of the levels of the `TIMES` factor, and each of the levels of the `COMPILERS` factor. Within each of the `LOCATIONS`, we randomly choose a pre-selected number of points.
+```
+              -------------------------------------------------------------
+              |           FACTOR 1          |          FACTOR 1           |
+              |           Level 1           |          Level 2            |
+              -------------------------------------------------------------
+              |   FACTOR 2   |   FACTOR 2   |   FACTOR 2   |   FACTOR 2   |
+              |   Level 1    |   Levels 2   |   Level 1    |   Levels 2   |
+---------------------------------------------------------------------------
+              |              |              |              |              |
+   FACTOR 3   |              |              |              |              |
+   Level 1    |              |              |              |              |
+              |              |              |              |              |
+---------------------------------------------------------------------------
+              |              |              |              |              |
+   FACTOR 3   |              |              |              |              |
+   Level 1    |              |              |              |              |
+              |              |              |              |              |
+---------------------------------------------------------------------------
+```
+
+
+
+
+After the ANOVA is conducted (three separate tests, one for each variable of interest: `u` (horizontal momentum, m/s), `theta` (potential temperature, K), and `qv` (water vapor mixing ratio, kg/kg). The typical ANOVA presentation is output to an auxiliary set of files. For example, here is the file `step_2_theta.txt`:
 ```
                   Source                   df      SS            MS   F Statistic
 ==================================================================================
