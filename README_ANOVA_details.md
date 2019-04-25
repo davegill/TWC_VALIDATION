@@ -52,3 +52,24 @@ Let's consider multiple MPAS data sets to be _conformable_ if they all share the
    - data output settings: frequency, variable set
    
 Assume that we have several conformable output data files. What statement can we make about the similarities or differences of the measured variables of these data sets?
+
+We use an Analysis of Variance (ANOVA) test to look at multiple factors. After the ANOVA is conducted (three separate tests, one for each variable of interest: `u` (horizontal momentum, m/s), `theta` (potential temperature, K), and `qv` (water vapor mixing ratio, kg/kg). The typical ANOVA presentation is output to an auxiliary set of files. For example, here is the file `step_2_theta.txt`:
+```
+                  Source                   df      SS            MS   F Statistic
+==================================================================================
+                                 Mean    0001     0.00682     0.00682     0.792
+                            LOCATIONS    0006    49.63231     8.27205   961.235
+                            COMPILERS    0002     0.00009     0.00004     0.005
+                                TIMES    0002     0.00110     0.00055     0.064
+                LOCATIONS x COMPILERS    0012     0.00046     0.00004     0.004
+                    LOCATIONS x TIMES    0012     6.93748     0.57812    67.179
+                    COMPILERS x TIMES    0004     0.00004     0.00001     0.001
+        LOCATIONS x COMPILERS x TIMES    0024     0.00012     0.00001     0.001
+                                Error    1197    10.30096     0.00861
+```
+The three key factors are `LOCATIONS`, `COMPILERS`, and `TIMES`. We always and only care about the `F Statistic` for the `COMPILERS` factor. The other two factors are to make sure that we are not confounding the interpretation of our results. The probability of the given `F Statistic` is based on the degrees of freedom of the factor (here the `df` for `COMPILERS` is `0002`) and the degrees of freedom of the `Error` (here, `1197`). These three values, `0.005`, `0002`, and `1197` (the `F Statistic`, the degrees of freedom for the factor of interest, and the degrees of freedom for the `Error`) are sufficient to compute a probability.
+
+A final python script is run to compute the probability of F Statistic. The probability is interpreted as rejecting the null hypotheis that the fields are the same. 
+
+   - A very high probability means that we DO reject the null hypothesis, that we DO interpret these fields as different.
+   - A very low probability means that we DO NOT reject the null hypothesis, that we DO interpret these fields as similar.

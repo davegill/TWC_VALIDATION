@@ -1,6 +1,6 @@
 ## TWC_VALIDATION ##
 
-The purpose of the TWC_VALIDATION code is to provide an objective evaluation of the _sameness_ of the output from different MPAS simulations. With this validation test, we expect the results to be nearly identical. The statistical technique that will be used in this test is typically part of an analysis associated with the Design of Experiments. In keeping with a systematic approach to causal impact, specific independent variables are manipulated and the resulting impacts on the dependent variables are determined. For the necessity of statistical rigor, randomization is included in the process.
+The purpose of the TWC_VALIDATION code is to provide an objective evaluation of the _sameness_ of the output from different MPAS simulations. With this validation test, we expect the results to be nearly identical. 
 
 #### Example Uses for this Code ####
 
