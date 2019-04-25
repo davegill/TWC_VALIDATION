@@ -19,9 +19,22 @@ The purpose of the TWC_VALIDATION code is to provide an objective evaluation of 
 
 #### How To Run #### 
 
-1. Fill in the run-time configuration file, `input.json`. There is a `README_JSON.md` file with specific details. There is an `EXAMPLES` directory that has several JSON files that are set up to work on NCAR's cheyenne computer.
-2. Run the driver script `validate.csh`, no arguments required as everything comes in from the JSON file.
-3. This script has three parts:
+1. Fill in the run-time configuration file, `input.json`. There is a `README_JSON.md` file with specific details. 
+2. The scripting system does not work with python 3 (yet). It is known to work with python/2.7.13. The following python modules are required:
+   - numpy
+   - netcdf4-python
+   - scipy
+   - matplotlib
+3. To try out this system on the NCAR cheyenne environment, there is an `EXAMPLES` directory that has several JSON files that are set up to work specifically on cheyenne. This syntax is sufficient for cheyenne.
+```
+> ml python/2.7.13 
+> ml numpy 
+> ml netcdf4-python 
+> ml scipy 
+> ml matplotlib
+```
+4. Run the executable driver script `./validate.csh`, no arguments required as everything comes in from the JSON file.
+5. This script has three parts:
    a. Read the NETCDF MAPS model data, select the correct variables and geophysical locations, compute differences, output temporary text files for use by the ANOVA program
    b. Run a three-factor ANOVA test on the following variables: u (horizontal momentum), t (potential temperature), qv (water vapor mixing ratio)
    c. Interpret the ANOVA output to produce a probability.
@@ -45,7 +58,7 @@ For ease of use, the results are broken into three pieces:
           ▉▉▉▉▉╲┈┈▕      ▏
           ▔▔▔▔▔▔╲▂▕▂▂▂▂▂▂▏
 ```
-2. Very confident that the results are different. For this variable, this is considered a NEGATIVE indiactor that this field is the same. To assume this response, we need any single variable to display to disply this symbol:
+2. Very confident that the results are different. For this variable, this is considered a NEGATIVE indiactor that this field is the same. To assume this response, we need any single variable to display to display this symbol:
 ```
                     ▉▉▉▉▉▉▉▉▉▉▉
                 ▉▉▉              ▉▉
@@ -63,7 +76,7 @@ For ease of use, the results are broken into three pieces:
             ▉▉             ▉▉▉
               ▉▉▉▉▉▉▉▉▉▉▉
 ```
-3. Gray area, just not sure. This is an indeterminate region. This is the state when there are no NEGATIVE indicators, but there are also no all POSITIVE indicators.
+3. Gray area, just not sure. This is an indeterminate region. This is the state when there are no NEGATIVE indicators, but there are also not all POSITIVE indicators.
 ```
                  ▉▉▉▉▉▉▉▉          
             ▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉       
