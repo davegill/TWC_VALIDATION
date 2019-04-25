@@ -82,7 +82,7 @@ The `init_file` is either the inital condition file or a restart. It is the full
 		},
 ```
 
-   - The `COMPILERS` factor is the generic name given to the actual comparison test of interest. For example, differnt levels of optimzations, CPU vs GPU, a collection of compilers, etc. These names (here, `A`, `B`, and `C`) need to match the strings AFTER the DATE in the MPAS model output. This needs to be modified for a particular case.
+   - The `COMPILERS` factor is the generic name given to the actual comparison test of interest. For example, different levels of optimzations, CPU vs GPU, a collection of compilers, etc. These names (here, `A`, `B`, and `C`) need to match the strings AFTER the DATE in the MPAS model output. This needs to be modified for a particular case.
 ```
 		
 		{
