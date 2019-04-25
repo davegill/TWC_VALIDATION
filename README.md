@@ -25,8 +25,9 @@ The purpose of the TWC_VALIDATION code is to provide an objective evaluation of 
    - netcdf4-python
    - scipy
    - matplotlib
-3. To try out this system on the NCAR cheyenne environment, there is an `EXAMPLES` directory that has several JSON files that are set up to work specifically on cheyenne. This syntax is sufficient for cheyenne.
+3. To try out this system on the NCAR cheyenne environment, there is an `EXAMPLES` directory that has several JSON files that are set up to work specifically on cheyenne. The following modules are sufficient to run this validation script on cheyenne.
 ```
+> ml gnu/7.3.0
 > ml python/2.7.13 
 > ml numpy 
 > ml netcdf4-python 
