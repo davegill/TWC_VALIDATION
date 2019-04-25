@@ -30,17 +30,17 @@ This README file explains how to set up the run-time configuration file `input.j
  394256 -rw-r--r-- 1 gill nmmm0048  403710928 Feb  4 17:43 validation.2010-10-24_00.18.00_D_michael.nc
 ```
 
-Set `mpas_root` to include the PATH and the portion of the FILENAME before the DATE. This needs to be modified for a particular case.
+Set `mpas_root` to include the PATH and the portion of the FILENAME before the DATE. *This needs to be modified for a particular case.*
 ```
 	"mpas_root"   :   "/gpfs/fs1/p/mmm/wmr/gill/TWC_60km/validation",
 ```
 
-The `mpas_tail` is the common part of the file name AFTER the date and AFTER the TEST type. This needs to be modified for a particular case.
+The `mpas_tail` is the common part of the file name AFTER the date and AFTER the TEST type. *This needs to be modified for a particular case.*
 ```
 	"mpas_tail"   :   "_michael.nc",
 ```
 
-The `init_file` is either the inital condition file or a restart. It is the full PATH and FILENAME. This needs to be modified for a particular case.
+The `init_file` is either the inital condition file or a restart. It is the full PATH and FILENAME. *This needs to be modified for a particular case.*
 ```
 	"init_file"   :   "/gpfs/fs1/p/mmm/wmr/gill/TWC_60km/restart.2010-10-24_00.00.00.nc",
 ```
@@ -82,7 +82,7 @@ The `init_file` is either the inital condition file or a restart. It is the full
 		},
 ```
 
-   - The `COMPILERS` factor is the generic name given to the actual comparison test of interest. For example, different levels of optimzations, CPU vs GPU, a collection of compilers, etc. These names (here, `A`, `B`, and `C`) need to match the strings AFTER the DATE in the MPAS model output FILENAMES. This needs to be modified for a particular case.
+   - The `COMPILERS` factor is the generic name given to the actual comparison test of interest. For example, different levels of optimzations, CPU vs GPU, a collection of compilers, etc. These names (here, `A`, `B`, and `C`) need to match the strings AFTER the DATE in the MPAS model output FILENAMES. *This needs to be modified for a particular case.*
 ```
 		
 		{
