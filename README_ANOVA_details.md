@@ -55,7 +55,7 @@ Assume that we have several conformable output data files. What statement can we
 
 We use an Analysis of Variance (ANOVA) test to look at multiple factors. Our null hypothesis is "these fields are the same". The ANOVA test provides a probability of rejecting that null hypothesis (a high probability means that we reject the null hypothesis, meaning we interpret the fields are different).
 
-The measurements are the dependent variables. Our measurements are the values of `u`, `theta`, and `qv`. These values are specifically chosen from each of the levels of the `LOCATIONS` factor, each of the levels of the `TIMES` factor, and each of the levels of the `COMPILERS` factor. Within each of the `LOCATIONS`, we randomly choose a pre-selected number of points.
+The measurements are the dependent variables. Our measurements are the values of `u`, `theta`, and `qv`. These values are specifically chosen from each of the levels of the `LOCATIONS` factor, each of the levels of the `TIMES` factor, and each of the levels of the `COMPILERS` factor. Within each of the `LOCATIONS`, we randomly choose a pre-selected number of points. For the three factors used in this experiment, we populate a table similar to what is shown below.
 ```
               -------------------------------------------------------------
               |           FACTOR 1          |          FACTOR 1           |
@@ -71,13 +71,11 @@ The measurements are the dependent variables. Our measurements are the values of
 ---------------------------------------------------------------------------
               |              |              |              |              |
    FACTOR 3   |              |              |              |              |
-   Level 1    |              |              |              |              |
+   Level 2    |              |              |              |              |
               |              |              |              |              |
 ---------------------------------------------------------------------------
 ```
-
-
-
+Each of the empty boxes is filled with the measurements. Currently the number of measurements taken is set to 20 (a run-time configurable value). The measurements are the difference values (MPAS output - MPAS input) of the MPAS  variables. A table is constructed for each of the measured variables: `u`, `theta`, and `qv`, so three separate ANOVA tests are conducted.
 
 After the ANOVA is conducted (three separate tests, one for each variable of interest: `u` (horizontal momentum, m/s), `theta` (potential temperature, K), and `qv` (water vapor mixing ratio, kg/kg). The typical ANOVA presentation is output to an auxiliary set of files. For example, here is the file `step_2_theta.txt`:
 ```
@@ -95,7 +93,7 @@ After the ANOVA is conducted (three separate tests, one for each variable of int
 ```
 The three key factors are `LOCATIONS`, `COMPILERS`, and `TIMES`. We always and only care about the `F Statistic` for the `COMPILERS` factor. The other two factors are to make sure that we are not confounding the interpretation of our results. The probability of the given `F Statistic` is based on the degrees of freedom of the factor (here the `df` for `COMPILERS` is `0002`) and the degrees of freedom of the `Error` (here, `1197`). These three values, `0.005`, `0002`, and `1197` (the `F Statistic`, the degrees of freedom for the factor of interest, and the degrees of freedom for the `Error`) are sufficient to compute a probability.
 
-A final python script is run to compute the probability of F Statistic. The probability is interpreted as rejecting the null hypotheis that the fields are the same. 
+A final python script is run to compute the probability of F Statistic. The result is interpreted as "What is the probability of rejecting the null hypotheis , rejecting the hypothesis that the fields are the same?"
 
-   - A very high probability means that we DO reject the null hypothesis, that we DO interpret these fields as different.
-   - A very low probability means that we DO NOT reject the null hypothesis, that we DO interpret these fields as similar.
+   - A very high probability means that we DO reject the null hypothesis, that we DO interpret this field  as different.
+   - A very low probability means that we DO NOT reject the null hypothesis, that we DO interpret the field as similar.
