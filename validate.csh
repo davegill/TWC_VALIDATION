@@ -24,7 +24,7 @@ if ( -e step_1.out ) then
 endif
 
 echo ; echo running python script to construct differences
-python rd_n_wrt.py $JSON_FILE >& step_1.out
+python3 rd_n_wrt.py $JSON_FILE >& step_1.out
 
 if ( ( ! -e theta.txt ) || \
      ( ! -e     u.txt ) || \
@@ -51,7 +51,7 @@ foreach v ( $vars_to_test )
 	./anova < ${v}.txt | tail -12 > step_2_${v}.out
 
 	echo ; echo compiler comparison for $v
-	python f2p.py < fort.10
+	python3 f2p.py < fort.10
 
 end
 
