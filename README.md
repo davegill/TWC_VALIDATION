@@ -4,11 +4,11 @@ The purpose of the TWC_VALIDATION code is to provide an objective evaluation of 
 
 #### Example Uses for this Code ####
 
-   - Comparing the output from same the code run with different compilers
-   - Comparing the output from same the code run with different optimzation levels of the same compiler
-   - Comparing the output from same the code run with different versions of the same compiler
-   - Comparing the output from same the code run with different hardware
-   - Comparing the output from same the code run with different floating point precision
+   - Comparing the output from the same code run with different compilers
+   - Comparing the output from the same code run with different optimzation levels of the same compiler
+   - Comparing the output from the same code run with different versions of the same compiler
+   - Comparing the output from the same code run with different hardware
+   - Comparing the output from the same code run with different floating point precision
 
 #### Incorrect Uses for this Code ####
 

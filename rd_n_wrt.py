@@ -126,7 +126,7 @@ def init_names_and_numbers(data):
 		print ('Found ' + data["init_file"])
 		print (' ')
 	else:
- 		print (" ")
+		print (" ")
 		print ('File does not exist: ' + data["init_file"])
 		print (" ")
 		sys.exit(data["init_file"])
@@ -331,7 +331,7 @@ def get_lat_lon_box_info(data, root, tail , obs, factor, lev, max_fac, max_lev, 
 			#	Choosing requested number from initial count
 		
 			rfile.write("Choosing " + str(obs) + " out of " + str(count[n,l]) + " values\n")
-			my_list = list(xrange(0,count[n,l]))
+			my_list = list(range(0,count[n,l]))
 			random.shuffle(my_list)
 		
 			#	From these super-duper random points, choose the first set that is

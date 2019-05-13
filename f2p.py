@@ -53,26 +53,26 @@ def contfractbeta(a,b,x, ITMAX = 200):
         if (abs(az-aold)<(EPS*abs(az))):
             return az
 
-    print 'a or b too large or given ITMAX too small for computing incomplete beta function.'
+    print('a or b too large or given ITMAX too small for computing incomplete beta function.')
 
 
 try:
-    F=float(raw_input('Input, F-statistic: '))
-    print F
+    F=float(input('Input, F-statistic: '))
+    print(F)
 except ValueError:
-    print "Not a number"
+    print("Not a number")
 
 try:
-    df1=int(raw_input('Input, df factor: '))
-    print df1
+    df1=int(input('Input, df factor: '))
+    print(df1)
 except ValueError:
-    print "Not a number"
+    print("Not a number")
 
 try:
-    df2=int(raw_input('Input, df error: '))
-    print df2
+    df2=int(input('Input, df error: '))
+    print(df2)
 except ValueError:
-    print "Not a number"
+    print("Not a number")
 
 print ("p-value probability = 1.0 means 100% reject null hypothesis that means are same")
 print ("p-value probability = " + str(incompbeta(.5*df1, .5*df2, float(df1)*F/(df1*F+df2))) )
