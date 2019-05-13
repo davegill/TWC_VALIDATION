@@ -55,14 +55,14 @@ Assume that we have several conformable output data files. What statement can we
 
 We use an Analysis of Variance (ANOVA) test to look at multiple factors. Our null hypothesis is "these fields are the same". The ANOVA test provides a probability of rejecting that null hypothesis (a high probability means that we reject the null hypothesis, meaning we interpret the fields are different).
 
-The measurements are the dependent variables. Our measurements are the values of `u`, `theta`, and `qv`. These values are specifically chosen from each of the levels of the `LOCATIONS` factor, each of the levels of the `TIMES` factor, and each of the levels of the `COMPILERS` factor. Within each of the `LOCATIONS`, we randomly choose a pre-selected number of points. For the three factors used in this experiment, we populate a table similar to what is shown below.
+The measurements are the dependent variables. Our measurements are the values of `u`, `theta`, and `qv`. These values are specifically chosen from each of the levels of the `LOCATIONS` factor, each of the levels of the `TIMES` factor, and each of the levels of the `COMPILERS` factor. Within each of the `LOCATIONS`, we randomly choose a pre-selected number of points. For the three factors used in this experiment (assuming only two levels for each factor), we populate a table similar to what is shown below.
 ```
               -------------------------------------------------------------
               |           FACTOR 1          |          FACTOR 1           |
               |           Level 1           |          Level 2            |
               -------------------------------------------------------------
               |   FACTOR 2   |   FACTOR 2   |   FACTOR 2   |   FACTOR 2   |
-              |   Level 1    |   Levels 2   |   Level 1    |   Levels 2   |
+              |   Level 1    |   Levels 2   |   Level 1    |   Level 2    |
 ---------------------------------------------------------------------------
               |              |              |              |              |
    FACTOR 3   |              |              |              |              |
@@ -93,7 +93,7 @@ After the ANOVA is conducted (three separate tests, one for each variable of int
 ```
 The three key factors are `LOCATIONS`, `COMPILERS`, and `TIMES`. We always and only care about the `F Statistic` for the `COMPILERS` factor. The other two factors are to make sure that we are not confounding the interpretation of our results. The probability of the given `F Statistic` is based on the degrees of freedom of the factor (here the `df` for `COMPILERS` is `0002`) and the degrees of freedom of the `Error` (here, `1197`). These three values, `0.005`, `0002`, and `1197` (the `F Statistic`, the degrees of freedom for the factor of interest, and the degrees of freedom for the `Error`) are sufficient to compute a probability.
 
-A final python script is run to compute the probability of F Statistic. The result is interpreted as "What is the probability of rejecting the null hypotheis , rejecting the hypothesis that the fields are the same?"
+A final python script is run to compute the probability of F Statistic. The result is interpreted as "What is the probability of rejecting the null hypotheis, i.e. rejecting the hypothesis that the fields are the same?"
 
-   - A very high probability means that we DO reject the null hypothesis, that we DO interpret this field  as different.
+   - A very high probability means that we DO reject the null hypothesis, that we DO interpret this field as different.
    - A very low probability means that we DO NOT reject the null hypothesis, that we DO interpret the field as similar.
