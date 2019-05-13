@@ -322,7 +322,7 @@ CONTAINS
             ss_mean = ss_mean + y(m,num_part)
          END DO
       END DO
-      ss_mean = ss_mean**2 / count
+      ss_mean = ABS(ss_mean**2 / count)
       ms_mean = ss_mean   / df_mean
 print *,'ss_mean = ',ss_mean
 print *,'ms_mean = ',ms_mean
@@ -345,10 +345,10 @@ print *,'ms_mean = ',ms_mean
                END DO
             END DO
          END DO
-         ss_f1 = ss_f1 + sum**2
+         ss_f1 = ABS(ss_f1 + sum**2)
       END DO
       hold_f1 = ss_f1 / count
-      ss_f1   = hold_f1 - ss_mean
+      ss_f1   = ABS(hold_f1 - ss_mean)
       ms_f1   = ss_f1 / df_f1
 
 print *,'ss_f1 = ',ss_f1
@@ -372,10 +372,10 @@ print *,'ms_f1 = ',ms_f1
                END DO
             END DO
          END DO
-         ss_f2 = ss_f2 + sum**2
+         ss_f2 = ABS(ss_f2 + sum**2)
       END DO
       hold_f2 = ss_f2 / count
-      ss_f2   = hold_f2 - ss_mean
+      ss_f2   = ABS(hold_f2 - ss_mean)
       ms_f2   = ss_f2 / df_f2
 
 print *,'ss_f2 = ',ss_f2
@@ -398,10 +398,10 @@ print *,'ms_f2 = ',ms_f2
                END DO
             END DO
          END DO
-         ss_f3 = ss_f3 + sum**2
+         ss_f3 = ABS(ss_f3 + sum**2)
       END DO
       hold_f3 = ss_f3 / count
-      ss_f3   = hold_f3 - ss_mean
+      ss_f3   = ABS(hold_f3 - ss_mean)
       ms_f3   = ss_f3 / df_f3
 
 print *,'ss_f3 = ',ss_f3
@@ -422,11 +422,11 @@ print *,'ms_f3 = ',ms_f3
                   count = count + 1
                END DO
             END DO
-            ss_i12 = ss_i12 + sum**2
+            ss_i12 = ABS(ss_i12 + sum**2)
          END DO
       END DO
       hold_i12 = ss_i12 / count
-      ss_i12 = hold_i12 - hold_f1 - hold_f2 + ss_mean
+      ss_i12 = ABS(hold_i12 - hold_f1 - hold_f2 + ss_mean)
       ms_i12 = ss_i12 / df_i12
 
 print *,'ss_i12 = ',ss_i12
@@ -447,11 +447,11 @@ print *,'ms_i12 = ',ms_i12
                   count = count + 1
                END DO
             END DO
-            ss_i13 = ss_i13 + sum**2
+            ss_i13 = ABS(ss_i13 + sum**2)
          END DO
       END DO
       hold_i13 = ss_i13 / count
-      ss_i13 = hold_i13 - hold_f1 - hold_f3 + ss_mean
+      ss_i13 = ABS(hold_i13 - hold_f1 - hold_f3 + ss_mean)
       ms_i13 = ss_i13 / df_i13
 
 print *,'ss_i13 = ',ss_i13
@@ -472,11 +472,11 @@ print *,'ms_i13 = ',ms_i13
                   count = count + 1
                END DO
             END DO
-            ss_i23 = ss_i23 + sum**2
+            ss_i23 = ABS(ss_i23 + sum**2)
          END DO
       END DO
       hold_i23 = ss_i23 / count
-      ss_i23 = hold_i23 - hold_f2 - hold_f3 + ss_mean
+      ss_i23 = ABS(hold_i23 - hold_f2 - hold_f3 + ss_mean)
       ms_i23 = ss_i23 / df_i23
 
 print *,'ss_i23 = ',ss_i23
@@ -496,12 +496,12 @@ print *,'ms_i23 = ',ms_i23
                   sum = sum + y(m,num_part)
                   count = count + 1
                END DO
-               ss_i123 = ss_i123 + sum**2
+               ss_i123 = ABS(ss_i123 + sum**2)
             END DO
          END DO
       END DO
       hold_i123 = ss_i123 / count
-      ss_i123 = hold_i123 - hold_i12 - hold_i13 - hold_i23 + hold_f1 + hold_f2 + hold_f3 - ss_mean
+      ss_i123 = ABS(hold_i123 - hold_i12 - hold_i13 - hold_i23 + hold_f1 + hold_f2 + hold_f3 - ss_mean)
       ms_i123 = ss_i123 / df_i123
 
 print *,'ss_i123 = ',ss_i123
@@ -522,7 +522,7 @@ print *,'ms_i123 = ',ms_i123
             END DO
          END DO
       END DO
-      ss_err = ss_err - hold_i123
+      ss_err = ABS(ss_err - hold_i123)
       ms_err = ss_err / df_err
 
 print *,'ss_err = ',ss_err

@@ -12,22 +12,22 @@ def check_args():
 	#	Executable (first arg) and input file name (second arg)
 
 	if len(sys.argv) != 2:
-		print " "
-	 	print 'Usage: ' + sys.argv[0] + ' <JSON_info_file> '
-	 	print " "
-	 	sys.exit(1)
+		print (" ")
+		print ('Usage: ' + sys.argv[0] + ' <JSON_info_file> ')
+		print (" ")
+		sys.exit(1)
 	 	
 	#	Does the input file actually exist?
 
 	for file in range(1,len(sys.argv)):
 		if os.path.exists(sys.argv[file]):
-	 		print 'Found ' + sys.argv[file]
-			print ' '
-	 	else:
-	 		print " "
-	 		print 'File does not exist: ' + sys.argv[file]
-	 		print " "
-	 		sys.exit(file)
+			print ('Found ' + sys.argv[file])
+			print (' ')
+		else:
+			print (" ")
+			print ('File does not exist: ' + sys.argv[file])
+			print (" ")
+			sys.exit(file)
 
 
 
@@ -36,20 +36,20 @@ def read_input_json():
 	#	Pull in the JSON info file
 	
 	for file in range(1,len(sys.argv)):
-		print 'File ' + str(file) + ': ' + sys.argv[file]
-	 	print " "
+		print ('File ' + str(file) + ': ' + sys.argv[file])
+		print (" ")
 	
 		#	Get the setup for the ANOVA from the JSON input file
 	
 		fp = sys.argv[file]
-		print 'FP: File = ' + fp
+		print ('FP: File = ' + fp)
 		with open(fp, "r") as read_file:
 			data = json.load(read_file)
 	
 	#	Raw dump of the input JSON file, mostly for debugging
 	
 	if data["debug"]:
-		print json.dumps(data, sort_keys=True, indent=4)
+		print (json.dumps(data, sort_keys=True, indent=4))
 
 	#	Return the JSON file information
 
@@ -61,7 +61,7 @@ def init_names_and_numbers(data):
 
 	#	Print the initial comment, so we know what is going on
 	
-	print data["_comment_"]
+	print (data["_comment_"])
 	print ( " " )
 	
 	#	Assignment of filenames from the input JSON file
@@ -105,7 +105,7 @@ def init_names_and_numbers(data):
 	
 		#	Assign the factor name
 	
-		print "\n" + data['design'][fac]['factor']
+		print ("\n" + data['design'][fac]['factor'])
 		factor[fac] = data['design'][fac]['factor']
 	
 		#	For this factor, loop over all levels
@@ -117,11 +117,20 @@ def init_names_and_numbers(data):
 			#	Assign the level name
 	
 			lenny[fac][lev] = len(data['design'][fac]['levels'][lev])
-	 		levels[fac][lev][0:lenny[fac][lev]] = data['design'][fac]['levels'][lev]
-			print "".join(levels[fac][lev][0:lenny[fac][lev]])
+			levels[fac][lev][0:lenny[fac][lev]] = data['design'][fac]['levels'][lev]
+			print ("".join(levels[fac][lev][0:lenny[fac][lev]]))
 	
 	print ("\nMPAS files")
 	print ("Initialization file: " + data["init_file"] )
+	if os.path.exists(data["init_file"]):
+		print ('Found ' + data["init_file"])
+		print (' ')
+	else:
+ 		print (" ")
+		print ('File does not exist: ' + data["init_file"])
+		print (" ")
+		sys.exit(data["init_file"])
+
 	print ("MPAS root:           " + root )
 	print ("MPAS tail:           " + tail )
 	
@@ -438,7 +447,7 @@ def diffs_for_anova(data,num_fields,fields,max_fac,obs,factor,root,tail,regions,
 									i = 0
 									while i < data["num_points_per_region"] :
 										file.write(str( \
-										              '{:3.12e}'.format( \
+										              '{:.16e}'.format( \
 										               f.variables["".join(fields[n])][0,indexes[n,l,i],v_lev[n]] - \
 									                       o.variables["".join(fields[n])][0,indexes[n,l,i],v_lev[n]] \
 										              ) \

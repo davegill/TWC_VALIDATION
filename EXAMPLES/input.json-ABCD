@@ -1,13 +1,13 @@
 {
-	"_comment_" : "Michael's Incremental Testing for GPU Commits",
+	"_comment_" : "Example of four files, one is different, interpret as FAIL",
 
 	"debug"       :   false,
 
-	"mpas_root"   :   "/gpfs/fs1/scratch/gill/IBM_COMPARISONS/TWC_VALIDATION/validation",
+	"mpas_root"   :   "/gpfs/fs1/p/mmm/wmr/gill/TWC_60km/validation",
 
 	"mpas_tail"   :   "_michael.nc",
 
-	"init_file" : "/glade/scratch/duda/gill/orig/restart.2010-10-24_00.00.00.nc",
+	"init_file"   :   "/gpfs/fs1/p/mmm/wmr/gill/TWC_60km/restart.2010-10-24_00.00.00.nc",
 
 	"num_points_per_region" : 20,
 
@@ -39,8 +39,8 @@
 		
 		{
 			"factor" : "COMPILERS",
-			"names"  : [ "A", "B", "C" ],
-			"levels" : [ "A", "B", "C" ] 
+			"names"  : [ "A", "B", "C", "D" ],
+			"levels" : [ "A", "B", "C", "D" ] 
 		},
 		
 		{
