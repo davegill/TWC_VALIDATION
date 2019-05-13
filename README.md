@@ -20,19 +20,14 @@ The purpose of the TWC_VALIDATION code is to provide an objective evaluation of 
 #### How To Run #### 
 
 1. Fill in the run-time configuration file, `input.json`. There is a `README_JSON.md` file with specific details. 
-2. The scripting system does not work with python 3 (yet). It is known to work with python/2.7.13. The following python modules are required:
+2. The scripting system uses python 3. The following python modules are required:
    - numpy
    - netcdf4-python
    - scipy
    - matplotlib
-3. To try out this system on the NCAR cheyenne environment, there is an `EXAMPLES` directory that has several JSON files that are set up to work specifically on cheyenne. The following modules are sufficient to run this validation script on cheyenne.
+3. To try out this system on the NCAR cheyenne environment, there is an `EXAMPLES` directory that has several JSON files that are set up to work specifically on cheyenne. The following is sufficient to run this validation script on cheyenne.
 ```
-> ml gnu/7.3.0
-> ml python/2.7.13 
-> ml numpy 
-> ml netcdf4-python 
-> ml scipy 
-> ml matplotlib
+> ncar_pylib
 ```
 4. Run the executable driver script `./validate.csh`, no arguments are required as everything comes in from the JSON file.
 5. This script has three parts:
