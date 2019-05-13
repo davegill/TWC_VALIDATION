@@ -1,9 +1,7 @@
 #!/usr/bin/python
 # coding: utf8
 
-# -*- coding: iso-8859-15 -*-
-
-#STOLEN FROM
+#Mostly STOLEN FROM
 #https://stackoverflow.com/questions/38113120/calculate-f-distribution-p-values-in-python
 
 #	If you have an f statistic, and you want to know a probability
