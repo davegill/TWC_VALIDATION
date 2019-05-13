@@ -1,4 +1,6 @@
 #!/usr/bin/python
+# coding: utf8
+
 # -*- coding: iso-8859-15 -*-
 
 #STOLEN FROM
